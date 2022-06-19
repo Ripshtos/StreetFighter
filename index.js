@@ -14,6 +14,7 @@ class Sprite {
         this.height = 150;
         this.lastkey;
         this.width = 50;
+        this.isAttacking = false;
         this.hitbox = { 
             position : this.position,
             width : 100,
@@ -44,11 +45,11 @@ class Sprite {
         if (this.position.x + this.velocity.x > 970) { // set border left
             this.position.x = 970;
         }
+    }
 
-        if (this.position.y + this.velocity.y + this.height <= 0) // set border up
-        {
-            this.position.y = 50;
-        }
+    Attacking(){
+        this.isAttacking = true;
+        setTimeout(() => { this.isAttacking = false;} , 100)
     }
 }
 
@@ -80,13 +81,16 @@ const enemy = new Sprite({ //enemy character
 
 const keys = { //constant that contains the if current key is pressed 
     a: { pressed: false },
-    d: { pressed: false },
-    w: { pressed: false }
-}
+    d: { pressed: false }  }
 
 let lastkey = 'z';
 
-
+function RectangularCollision({ rectangal1 , rectangal2}){ // collision detection
+    if( rectangal1.hitbox.position.x + rectangal1.hitbox.width >= rectangal2.position.x && rectangal1.hitbox.position.x <= rectangal2.hitbox.position.x + rectangal2.hitbox.width
+        && rectangal1.hitbox.position.y + rectangal1.hitbox.height >= rectangal2.position.y && rectangal1.isAttacking ){
+            return true;
+    }
+}
 
 function animate() //animation loop
 {
@@ -96,14 +100,16 @@ function animate() //animation loop
 
     if (keys.d.pressed && lastkey === 'd') { player.velocity.x = 3; }
     else if (keys.a.pressed && lastkey === 'a') { player.velocity.x = -3; }
-    else {
-
-    }
+    else { } 
 
     player.update();
     enemy.update();
     window.requestAnimationFrame(animate);
 
+    if( RectangularCollision ( { rectangal1 : player , rectangal2 : enemy })) // detect collision 
+    {
+        console.log('go');
+    } 
 }
 
 animate();
@@ -122,10 +128,16 @@ window.addEventListener('keydown', (event) => {
             break;
 
         case 'w':
-            keys.w.pressed = true;
-            player.velocity.y = -2;
-
+            if(player.position.y > 0)
+            {
+                player.velocity.y = -10;
+            }
             break;
+        
+        case ' ':
+            player.Attacking();
+            break;
+        
     }
 });
 
@@ -143,8 +155,6 @@ window.addEventListener('keyup', (event) => {
             break;
 
         case 'w':
-            keys.w.pressed = true;
-            lastkey = 'w';
             break;
     }
 });
