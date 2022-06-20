@@ -81,7 +81,9 @@ const enemy = new Sprite({ //enemy character
 
 const keys = { //constant that contains the if current key is pressed 
     a: { pressed: false },
-    d: { pressed: false }  }
+    d: { pressed: false },
+    arrowLeft : { pressed: false },
+    arrowRight : { pressed: false }}
 
 let lastkey = 'z';
 
@@ -102,14 +104,27 @@ function animate() //animation loop
     else if (keys.a.pressed && lastkey === 'a') { player.velocity.x = -3; }
     else { } 
 
+
+    if (keys.arrowRight.pressed && lastkey === 'arrowRight') { enemy.velocity.x = 3; }
+    else if (keys.arrowLeft.pressed && lastkey === 'arrowLeft') { enemy.velocity.x = -3; }
+    else { } 
+
+
     player.update();
     enemy.update();
     window.requestAnimationFrame(animate);
 
-    if( RectangularCollision ( { rectangal1 : player , rectangal2 : enemy })) // detect collision 
+    if( RectangularCollision ( { rectangal1 : player , rectangal2 : enemy })) // detect collision player points
     {
         console.log('go');
     } 
+
+    
+    if( RectangularCollision ( { rectangal1 : enemy , rectangal2 : player })) // detect collision enemy points
+    {
+        console.log('go');
+    } 
+
 }
 
 animate();
@@ -136,6 +151,30 @@ window.addEventListener('keydown', (event) => {
         
         case ' ':
             player.Attacking();
+            break;
+        
+    }
+    console.log(event);
+    switch (event.key) {
+        case 'ArrowRight':
+            keys.arrowRight.pressed = true;
+            lastkey = 'arrowRight';
+            break;
+
+        case 'ArrowLeft':
+            keys.arrowLeft.pressed = true;
+            lastkey = 'arrowLeft';
+            break;
+
+        case 'ArrowUp':
+            if(enemy.position.y > 0)
+            {
+                enemy.velocity.y = -10;
+            }
+            break;
+        
+        case 'ArrowDown':
+            enemy.Attacking();
             break;
         
     }
