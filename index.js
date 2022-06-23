@@ -37,8 +37,16 @@ class Sprite {
     }
 
     update() {
-        this.draw()
-        this.hitbox.position.x = this.position.x + this.hitbox.offset.x;
+        this.draw() 
+        if(this.lastkey === 'd' || this.lastkey === 'arrowRight'){
+            this.hitbox.offset.x = 0;
+        }
+        else if(this.lastkey === 'a' || this.lastkey === 'arrowLeft') {
+            this.hitbox.offset.x = -50 ;
+        }
+
+        
+        this.hitbox.position.x = this.position.x + this.hitbox.offset.x;        
         this.hitbox.position.y = this.position.y;
 
         this.position.x += this.velocity.x;
@@ -105,9 +113,8 @@ const keys = { //constant that contains the if current key is pressed
     a: { pressed: false },
     d: { pressed: false },
     arrowLeft : { pressed: false },
-    arrowRight : { pressed: false }}
+    arrowRight : { pressed: false }};
 
-let lastkey = 'z';
 
 function RectangularCollision({ rectangal1 , rectangal2}){ // collision detection
     if( rectangal1.hitbox.position.x + rectangal1.hitbox.width >= rectangal2.position.x && rectangal1.hitbox.position.x <= rectangal2.hitbox.position.x + rectangal2.hitbox.width
@@ -123,13 +130,13 @@ function animate() //animation loop
     player.velocity.x = 0;
     enemy.velocity.x = 0;
 
-    if (keys.d.pressed && lastkey === 'd') { player.velocity.x = 3; }
-    else if (keys.a.pressed && lastkey === 'a') { player.velocity.x = -3; }
+    if (keys.d.pressed && player.lastkey === 'd') { player.velocity.x = 3; }
+    else if (keys.a.pressed && player.lastkey === 'a') { player.velocity.x = -3; }
     else { } 
 
 
-    if (keys.arrowRight.pressed && lastkey === 'arrowRight') { enemy.velocity.x = 3; }
-    else if (keys.arrowLeft.pressed && lastkey === 'arrowLeft') { enemy.velocity.x = -3; }
+    if (keys.arrowRight.pressed && enemy.lastkey === 'arrowRight') { enemy.velocity.x = 3; }
+    else if (keys.arrowLeft.pressed && enemy.lastkey === 'arrowLeft') { enemy.velocity.x = -3; }
     else { } 
 
 
@@ -157,12 +164,12 @@ window.addEventListener('keydown', (event) => {
     switch (event.key) {
         case 'd':
             keys.d.pressed = true;
-            lastkey = 'd';
+            player.lastkey = 'd';
             break;
 
         case 'a':
             keys.a.pressed = true;
-            lastkey = 'a';
+            player.lastkey = 'a';
             break;
 
         case 'w':
@@ -181,12 +188,12 @@ window.addEventListener('keydown', (event) => {
     switch (event.key) {
         case 'ArrowRight':
             keys.arrowRight.pressed = true;
-            lastkey = 'arrowRight';
+            enemy.lastkey = 'arrowRight';
             break;
 
         case 'ArrowLeft':
             keys.arrowLeft.pressed = true;
-            lastkey = 'arrowLeft';
+            enemy.lastkey = 'arrowLeft';
             break;
 
         case 'ArrowUp':
