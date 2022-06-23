@@ -15,6 +15,8 @@ class Sprite {
         this.lastkey;
         this.width = 50;
         this.isAttacking = false;
+        this.health = 100;
+        this.isDead = false;
         this.hitbox = {
             position : { x : this.position.x, 
             y : this.position.y },    
@@ -144,15 +146,19 @@ function animate() //animation loop
     enemy.update();
     window.requestAnimationFrame(animate);
 
-    if( RectangularCollision ( { rectangal1 : player , rectangal2 : enemy })) // detect collision player points
+    if( RectangularCollision ( { rectangal1 : player , rectangal2 : enemy })) // detect collision if player hits enemy
     {
-        console.log('go');
+        console.log("player hit enemy");
+        enemy.health = enemy.health - 2;
+        console.log(enemy.health);
     } 
 
     
-    if( RectangularCollision ( { rectangal1 : enemy , rectangal2 : player })) // detect collision enemy points
+    if( RectangularCollision ( { rectangal1 : enemy , rectangal2 : player })) // detect collision if enemy hits player
     {
-        console.log('go');
+        console.log("enemy hit player");
+        player.health = player.health - 2;
+        console.log(player.health);
     } 
 
 }
