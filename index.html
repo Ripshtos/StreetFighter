@@ -1,9 +1,24 @@
 <html>
     <head> <link rel="stylesheet" href="gameCss.css"> </head>
         <body>
-          <div id="Canvas1">
-             <canvas></canvas>
-             <script src="index.js" > </script>
+          <div id="Canvas1"> 
+              <canvas></canvas>
+
+              <div class="HealthBars" >      
+                <div class="health-bar-player" data-total="1000" data-value="1000"> <!-- player health bar -->
+                  <div class="bar-player">
+                      <div class="hit"></div>
+                  </div>
+                </div>
+
+                <div class="health-bar-enemy" data-total="1000" data-value="1000"> <!-- enemy health bar -->
+                  <div class="bar-enemy">
+                      <div class="hit"></div>
+                  </div>
+                </div> 
+                 
+              </div>       
+              <script src="index.js" > </script>
           </div>
         </body> 
 </html> 

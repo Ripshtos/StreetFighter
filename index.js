@@ -66,6 +66,13 @@ class Sprite {
             this.position.x = 970;
         }
 
+        if(this.health <= 0)//
+        {
+            this.isDead = true;
+        }
+
+
+
 
     }
 
@@ -132,15 +139,17 @@ function animate() //animation loop
     player.velocity.x = 0;
     enemy.velocity.x = 0;
 
-    if (keys.d.pressed && player.lastkey === 'd') { player.velocity.x = 3; }
-    else if (keys.a.pressed && player.lastkey === 'a') { player.velocity.x = -3; }
-    else { } 
+    if(!player.isDead){
+        if (keys.d.pressed && player.lastkey === 'd') { player.velocity.x = 3; }
+        else if (keys.a.pressed && player.lastkey === 'a') { player.velocity.x = -3; }
+        else { } 
+    }
 
-
-    if (keys.arrowRight.pressed && enemy.lastkey === 'arrowRight') { enemy.velocity.x = 3; }
-    else if (keys.arrowLeft.pressed && enemy.lastkey === 'arrowLeft') { enemy.velocity.x = -3; }
-    else { } 
-
+    if(!enemy.isDead){
+        if (keys.arrowRight.pressed && enemy.lastkey === 'arrowRight') { enemy.velocity.x = 3; }
+        else if (keys.arrowLeft.pressed && enemy.lastkey === 'arrowLeft') { enemy.velocity.x = -3; }
+        else { } 
+    }
 
     player.update();
     enemy.update();
@@ -167,30 +176,32 @@ animate();
 
 window.addEventListener('keydown', (event) => {
     console.log(event);
-    switch (event.key) {
-        case 'd':
-            keys.d.pressed = true;
-            player.lastkey = 'd';
-            break;
+    if (!player.isDead){
+        switch (event.key) {
+            case 'd':
+                keys.d.pressed = true;
+                player.lastkey = 'd';
+                break;
 
-        case 'a':
-            keys.a.pressed = true;
-            player.lastkey = 'a';
-            break;
+            case 'a':
+                keys.a.pressed = true;
+                player.lastkey = 'a';
+                break;
 
-        case 'w':
-            if(player.position.y > 0)
-            {
-                player.velocity.y = -10;
+            case 'w':
+                if(player.position.y > 0)
+                {
+                    player.velocity.y = -10;
+                }
+                break;
+            
+            case ' ':
+                player.Attacking();
+                break;
             }
-            break;
-        
-        case ' ':
-            player.Attacking();
-            break;
-        
     }
     console.log(event);
+    if(!enemy.isDead){
     switch (event.key) {
         case 'ArrowRight':
             keys.arrowRight.pressed = true;
@@ -203,7 +214,7 @@ window.addEventListener('keydown', (event) => {
             break;
 
         case 'ArrowUp':
-            if(enemy.position.y > 0)
+            if(enemy.position.y > 0 ) 
             {
                 enemy.velocity.y = -10;
             }
@@ -212,7 +223,7 @@ window.addEventListener('keydown', (event) => {
         case 'ArrowDown':
             enemy.Attacking();
             break;
-        
+        }
     }
 });
 
