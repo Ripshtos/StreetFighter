@@ -5,7 +5,7 @@
     transform: translate(-50%, -50%);               
 }
 
-.health-bar-player { /* Player health bar outside*/
+#health-bar-player { /* Player health bar outside*/
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -19,7 +19,18 @@
     position:absolute; top:20px; left:30px; 
 }
 
-.bar-player { /* Player health bar inside */
+#timer{
+    position:absolute;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%, -50%);     
+}
+
+
+#bar-player { /* Player health bar inside */
     background: #c54;
     width: 100%;
     height: 10px;
@@ -27,7 +38,7 @@
     transition: width .5s linear;
 }
 
-.health-bar-enemy { /* enemy health bar outside*/
+#health-bar-enemy { /* enemy health bar outside*/
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -41,7 +52,7 @@
     position:absolute; top:20px; left: 800px; 
 }
 
-.bar-enemy { /* Player health bar inside */
+#bar-enemy { /* Player health bar inside */
     background: rgb(0, 79, 140);
     width: 100%;
     height: 10px;
@@ -49,13 +60,7 @@
     transition: width .5s linear;
 }
 
-
-
-
-
-
-
-
+/*
 .hit {
     background: rgba(255,255,255,0.6);
     position: absolute;
@@ -65,3 +70,4 @@
     width: 0px;  
     transition: width .5s linear;
 }
+*/

@@ -4,20 +4,23 @@
           <div id="Canvas1"> 
               <canvas></canvas>
 
-              <div class="HealthBars" >      
-                <div class="health-bar-player" data-total="1000" data-value="1000"> <!-- player health bar -->
-                  <div class="bar-player">
-                      <div class="hit"></div>
+              <div id="HealthBars" >      
+                <div id="health-bar-player" data-total="100" data-value="100"> <!-- player health bar -->
+                  <div id="bar-player">
+                      <div id="hit-player"></div>
                   </div>
                 </div>
 
-                <div class="health-bar-enemy" data-total="1000" data-value="1000"> <!-- enemy health bar -->
-                  <div class="bar-enemy">
-                      <div class="hit"></div>
+                <div id="timer"> <progress value="0" max="60" id="progressBar"></progress></div>
+
+                <div id="health-bar-enemy" data-total="100" data-value="100"> <!-- enemy health bar -->
+                  <div id="bar-enemy">
+                      <div id="hit-enemy"></div>
                   </div>
                 </div> 
                  
-              </div>       
+              </div>   
+                  
               <script src="index.js" > </script>
           </div>
         </body> 

@@ -8,7 +8,7 @@ c.fillRect(0, 0, canvas.width, canvas.height);
 const gravity = 0.2;
 
 class Sprite {
-    constructor({ position, velocity,color,offset}) {
+    constructor({position, velocity,color,offset}) {
         this.position = position;
         this.velocity = velocity;
         this.height = 150;
@@ -158,7 +158,8 @@ function animate() //animation loop
     if( RectangularCollision ( { rectangal1 : player , rectangal2 : enemy })) // detect collision if player hits enemy
     {
         console.log("player hit enemy");
-        enemy.health = enemy.health - 2;
+        enemy.health -= 2;
+        document.querySelector('#bar-enemy').style.width = enemy.health + "%";
         console.log(enemy.health);
     } 
 
@@ -166,13 +167,46 @@ function animate() //animation loop
     if( RectangularCollision ( { rectangal1 : enemy , rectangal2 : player })) // detect collision if enemy hits player
     {
         console.log("enemy hit player");
-        player.health = player.health - 2;
+        player.health -= 2;
+        document.querySelector('#bar-player').style.width = player.health + "%";
         console.log(player.health);
     } 
 
 }
 
+function counter(){ //game timer set to 60 seconds
+    var timeleft = 60;
+    var downloadTimer = setInterval(function(){
+    if(timeleft <= 0){// when timer ends
+        clearInterval(downloadTimer);
+        console.log("fin")
+        if (player.health > enemy.health){
+            enemy.isDead = true;
+            console.log("player wins");
+
+        }
+        else{
+            player.isDead = true;
+            console.log("enemy wins");
+        }
+    }
+    document.getElementById("progressBar").value = 60 - timeleft;
+    timeleft -= 1;
+    }, 1000);
+    
+}
+
+counter();
 animate();
+
+
+  
+  
+
+
+
+
+
 
 window.addEventListener('keydown', (event) => {
     console.log(event);
