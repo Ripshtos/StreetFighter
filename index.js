@@ -6,13 +6,13 @@ canvas.height = 576;
 c.fillRect(0, 0, canvas.width, canvas.height);
 
 const gravity = 0.2;
-const backGround = new Sprite({ position : {
+const background = new Sprite({ position :{
     x:0,
     y:0
 },
-imgSrc :'./img/BackGround.mp4'})
+imgSrc :'./img/background.png'})
 
-backGround.update();
+
 
 const player = new Fighter({ //player character
     position: {
@@ -63,12 +63,13 @@ function RectangularCollision({ rectangal1 , rectangal2}){ // collision detectio
 
 function animate() //animation loop
 {
+    window.requestAnimationFrame(animate);
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
+    background.update();
     player.velocity.x = 0;
     enemy.velocity.x = 0;
-
-    if(!player.isDead){
+        if(!player.isDead){
         if (keys.d.pressed && player.lastkey === 'd') { player.velocity.x = 3; }
         else if (keys.a.pressed && player.lastkey === 'a') { player.velocity.x = -3; }
         else { } 
@@ -82,7 +83,6 @@ function animate() //animation loop
 
     player.update();
     enemy.update();
-    window.requestAnimationFrame(animate);
 
     if( RectangularCollision ( { rectangal1 : player , rectangal2 : enemy })) // detect collision if player hits enemy
     {
@@ -128,19 +128,7 @@ function counter(){ //game timer set to 60 seconds
 counter();
 animate();
 
-
-  
-  
-
-
-
-
-
-
 window.addEventListener('keydown', (event) => {
-    console.log(event);
-    if(event.key === 'D'){ event.key ='d'}
-    
     if (!player.isDead){
         switch (event.key) {
             case 'd':
@@ -165,7 +153,7 @@ window.addEventListener('keydown', (event) => {
                 break;
             }
     }
-    console.log(event);
+
     if(!enemy.isDead){
     switch (event.key) {
         case 'ArrowRight':
@@ -193,7 +181,6 @@ window.addEventListener('keydown', (event) => {
 });
 
 window.addEventListener('keyup', (event) => {
-    console.log(event);
     switch (event.key) {
         case 'd':
             keys.d.pressed = false;

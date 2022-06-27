@@ -1,8 +1,8 @@
 class Sprite {
-    constructor(position , imgSrc) {
+    constructor({position , imgSrc}) {
         this.position = position;
         this.image = new Image();
-        this.imgSrc = imgSrc;
+        this.image.src = imgSrc;
         this.height = 150;
         this.width = 50;
     }
@@ -13,7 +13,6 @@ class Sprite {
 
     update() {
         this.draw() 
-        
     }
 }
 
@@ -79,12 +78,7 @@ class Fighter {
         if(this.health <= 0)//
         {
             this.isDead = true;
-        }
-    
-    
-    
-    
-    
+        }    
     }
 
     Attacking(){
