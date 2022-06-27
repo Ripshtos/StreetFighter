@@ -10,7 +10,7 @@ const background = new Sprite({ position :{
     x:0,
     y:0
 },
-imgSrc :'./img/background.png'})
+imgSrc :'./img/background2.png', scale : 1 ,framemax : 1})
 
 
 
