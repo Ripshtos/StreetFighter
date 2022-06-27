@@ -6,86 +6,15 @@ canvas.height = 576;
 c.fillRect(0, 0, canvas.width, canvas.height);
 
 const gravity = 0.2;
+const backGround = new Sprite({ position : {
+    x:0,
+    y:0
+},
+imgSrc :'./img/BackGround.mp4'})
 
-class Sprite {
-    constructor({position, velocity,color,offset}) {
-        this.position = position;
-        this.velocity = velocity;
-        this.height = 150;
-        this.lastkey;
-        this.width = 50;
-        this.isAttacking = false;
-        this.health = 100;
-        this.isDead = false;
-        this.hitbox = {
-            position : { x : this.position.x, 
-            y : this.position.y },    
-            offset,
-            width : 100,
-            height : 50
-        }
-        this.color = color;
-        this.offset = offset;
-    }
+backGround.update();
 
-    draw() {
-        c.fillStyle = this.color;
-        c.fillRect(this.position.x, this.position.y, this.width, this.height);
-        
-        if(this.isAttacking){
-            c.fillStyle = 'green';
-            c.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);    
-        }
-    }
-
-    update() {
-        this.draw() 
-        if(this.lastkey === 'd' || this.lastkey === 'arrowRight'){
-            this.hitbox.offset.x = 0;
-        }
-        else if(this.lastkey === 'a' || this.lastkey === 'arrowLeft') {
-            this.hitbox.offset.x = -50 ;
-        }
-
-        
-        this.hitbox.position.x = this.position.x + this.hitbox.offset.x;        
-        this.hitbox.position.y = this.position.y;
-
-        this.position.x += this.velocity.x;
-        this.position.y += this.velocity.y;
-        if (this.position.y + this.height + this.velocity.y >= canvas.height) { // set floor
-            this.velocity.y = 0;
-        }
-        else { this.velocity.y += gravity; }
- 
-        if (this.position.x + this.velocity.x < 5) { // set border right
-            this.position.x = 5;
-        }
-
-        if (this.position.x + this.velocity.x > 970) { // set border left
-            this.position.x = 970;
-        }
-
-        if(this.health <= 0)//
-        {
-            this.isDead = true;
-        }
-
-
-
-
-    }
-
-    Attacking(){
-        this.isAttacking = true;
-        setTimeout(() => { this.isAttacking = false;} , 100)
-    }
-}
-
-
-
-
-const player = new Sprite({ //player character
+const player = new Fighter({ //player character
     position: {
         x: 10,
         y: 0
@@ -101,7 +30,7 @@ const player = new Sprite({ //player character
     }
 });
 
-const enemy = new Sprite({ //enemy character
+const enemy = new Fighter({ //enemy character
     position: {
         x: 600,
         y: 0
@@ -210,6 +139,8 @@ animate();
 
 window.addEventListener('keydown', (event) => {
     console.log(event);
+    if(event.key === 'D'){ event.key ='d'}
+    
     if (!player.isDead){
         switch (event.key) {
             case 'd':
