@@ -6,11 +6,14 @@ canvas.height = 576;
 c.fillRect(0, 0, canvas.width, canvas.height);
 
 const gravity = 0.2;
-const background = new Sprite({ position :{
+const background = new Sprite({ 
+    position :{
     x:0,
     y:0
 },
-imgSrc :'./img/background2.png', scale : 1 ,framemax : 1})
+imgSrc :'./img/background2.png',
+
+})
 
 
 
@@ -23,26 +26,38 @@ const player = new Fighter({ //player character
         x: 0,
         y: 10
     },
-    color :'red',
     offset: {
-        x:0,
-        y:0
-    }
+        x: 0,
+        y: 0
+    },
+    imgSrc:'./img/ken/kenIdle4.png',
+    framemax : 4,
+    scale : 2,
+    offset :{
+        x:30,
+        y:100
+    },
 });
 
 const enemy = new Fighter({ //enemy character
     position: {
-        x: 600,
+        x: 1000,
         y: 0
     },
     velocity: { 
         x: 0,
         y: 10
     },
-    color: 'blue',
-    offset:{
-        x:-50,
-        y:0
+    offset: {
+        x: 0,
+        y: 0
+    },
+    imgSrc:'./img/ken/kenIdle4.png',
+    framemax : 4,
+    scale : 2,
+    offset :{
+        x:30,
+        y:100
     }
 });
 
@@ -69,7 +84,7 @@ function animate() //animation loop
     background.update();
     player.velocity.x = 0;
     enemy.velocity.x = 0;
-        if(!player.isDead){
+    if(!player.isDead){
         if (keys.d.pressed && player.lastkey === 'd') { player.velocity.x = 3; }
         else if (keys.a.pressed && player.lastkey === 'a') { player.velocity.x = -3; }
         else { } 
@@ -83,7 +98,7 @@ function animate() //animation loop
 
     player.update();
     enemy.update();
-
+    
     if( RectangularCollision ( { rectangal1 : player , rectangal2 : enemy })) // detect collision if player hits enemy
     {
         console.log("player hit enemy");
