@@ -16,7 +16,6 @@ imgSrc :'./img/background2.png',
 })
 
 
-
 const player = new Fighter({ //player character
     position: {
         x: 10,
@@ -36,7 +35,24 @@ const player = new Fighter({ //player character
     offset :{
         x:30,
         y:100
-    },
+    },sprites:{
+        idle :{
+            imgSrc:'./img/ken/kenIdle4.png',
+            framemax : 4
+        },
+        run :{
+            imgSrc:'./img/ken/kenRun5.png',
+            framemax : 5
+        },
+        jump :{
+            imgSrc:'./img/ken/kenJump7.png',
+            framemax : 7
+        },
+        punch :{
+            imgSrc:'./img/ken/kenPunch3.png',
+            framemax : 3
+        }
+    } 
 });
 
 const enemy = new Fighter({ //enemy character
@@ -58,6 +74,20 @@ const enemy = new Fighter({ //enemy character
     offset :{
         x:30,
         y:100
+    },
+    sprites:{
+        idle :{
+            imgSrc:'./img/ken/kenIdle4.png',
+            framemax : 4
+        },
+        run :{
+            imgSrc:'./img/ken/kenRun5.png',
+            framemax : 5
+        },
+        jump :{
+            imgSrc:'./img/ken/kenJump7.png',
+            framemax : 7
+        }
     }
 });
 
@@ -84,16 +114,22 @@ function animate() //animation loop
     background.update();
     player.velocity.x = 0;
     enemy.velocity.x = 0;
+    
     if(!player.isDead){
-        if (keys.d.pressed && player.lastkey === 'd') { player.velocity.x = 3; }
-        else if (keys.a.pressed && player.lastkey === 'a') { player.velocity.x = -3; }
-        else { } 
+        if (keys.d.pressed && player.lastkey === 'd') { player.velocity.x = 3;
+        player.SwitchSprite('run'); }
+        else if (keys.a.pressed && player.lastkey === 'a') { player.velocity.x = -3; player.SwitchSprite('run') }
+        else {  player.SwitchSprite('idle');  } 
     }
 
     if(!enemy.isDead){
         if (keys.arrowRight.pressed && enemy.lastkey === 'arrowRight') { enemy.velocity.x = 3; }
         else if (keys.arrowLeft.pressed && enemy.lastkey === 'arrowLeft') { enemy.velocity.x = -3; }
         else { } 
+    }
+
+    if(player.velocity.y > 0){
+        player.SwitchSprite('jump');
     }
 
     player.update();
@@ -104,6 +140,7 @@ function animate() //animation loop
         console.log("player hit enemy");
         enemy.health -= 2;
         document.querySelector('#bar-enemy').style.width = enemy.health + "%";
+        
         console.log(enemy.health);
     } 
 
@@ -165,6 +202,7 @@ window.addEventListener('keydown', (event) => {
             
             case ' ':
                 player.Attacking();
+                player.SwitchSprite('punch');
                 break;
             }
     }

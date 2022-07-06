@@ -1,10 +1,10 @@
 class Sprite {
     constructor({position , imgSrc , scale = 1, framemax = 1, offset = {x: 0 , y : 0}}) {
         this.position = position;
+        this.width = 150;
+        this.height = 50;
         this.image = new Image();
         this.image.src = imgSrc;
-        this.height = 50;
-        this.width = 150;
         this.scale = scale;
         this.framemax = framemax;
         this.framesCurrent = 0;
@@ -26,21 +26,24 @@ class Sprite {
         this.image.height * this.scale)
         }
 
+    
+    animateFrame(){
+        this.framesElapsed++;
+        if(this.framesElapsed % this.frameHold === 0){
+            if(this.framesCurrent < this.framemax - 1){                    this.framesCurrent++;
+                } else{
+                this.framesCurrent = 0;
+            }
+        }
+    }
+
+    
     update() {
         this.draw();
         this.animateFrame();
     }
 
-    animateFrame(){
-        this.framesElapsed++;
-        if(this.framesElapsed % this.frameHold === 0){
-            if(this.framesCurrent < this.framemax - 1){
-                this.framesCurrent++;
-            } else{
-                this.framesCurrent = 0;
-            }
-        }
-    }
+    
 
 }
 
@@ -51,12 +54,11 @@ class Fighter extends Sprite { // player
     constructor({
         position,
         velocity,
-        color,
+        color = 'red',
         imgSrc,
         scale = 1,
         framemax = 1,
-        offset = {x: 0,
-        y: 0},
+        offset = {x: 0, y: 0},
         sprites
     })
     {
@@ -88,37 +90,34 @@ class Fighter extends Sprite { // player
         this.framesElapsed = 0;
         this.frameHold = 10; 
         this.sprites = sprites;
-        
         for ( const sprite in this.sprites){
-            sprites[sprite].Image = new Image();
-            sprites[sprite].Image.src = sprites[sprite].imgSrc;
+            sprites[sprite].image = new Image();
+            sprites[sprite].image.src = sprites[sprite].imgSrc;
         }
-
     }
 
 
     update() {
         this.draw() 
-      
-        /*
+        this.animateFrame();
+        
         if(this.lastkey === 'd' || this.lastkey === 'arrowRight'){
             this.hitbox.offset.x = 0;
         }
         else if(this.lastkey === 'a' || this.lastkey === 'arrowLeft') {
             this.hitbox.offset.x = -50 ;
         }
-        */
-       
-        this.animateFrame();
+        
+
         this.hitbox.position.x = this.position.x + this.hitbox.offset.x;        
         this.hitbox.position.y = this.position.y;
 
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
-        if (this.position.y + this.height + this.velocity.y >= canvas.height) { // set floor
-            this.velocity.y = 0;
-        }
-        else { this.velocity.y += gravity; }
+        
+        if (this.position.y + this.height + this.velocity.y >= canvas.height) {
+          this.velocity.y = 0;
+        } else this.velocity.y += gravity
  
         if (this.position.x + this.velocity.x  < 0) { // set border right
             this.position.x = 0;
@@ -140,32 +139,48 @@ class Fighter extends Sprite { // player
     }
 
     SwitchSprite(sprite){
-        switch (sprite) {
+
+        if( this.image === this.sprites.punch.image && this.framesCurrent < this.sprites.punch.framemax -1 ){
+             return
+        }
+
+           switch (sprite) {
             case 'idle':
-              if (this.image !== this.sprites.idle.image) {
-                this.image = this.sprites.idle.image
-                this.framesMax = this.sprites.idle.framesMax
-                this.framesCurrent = 0
-              }
-              break
-            case 'run':
-              if (this.image !== this.sprites.run.image) {
-                this.image = this.sprites.run.image
-                this.framesMax = this.sprites.run.framesMax
-                this.framesCurrent = 0
-              }
-              break
-            case 'jump':
-              if (this.image !== this.sprites.jump.image) {
-                this.image = this.sprites.jump.image
-                this.framesMax = this.sprites.jump.framesMax
-                this.framesCurrent = 0
-              }
+                if(this.image !== this.sprites.idle.image){
+                    this.image = this.sprites.idle.image;
+                    this.framemax =this.sprites.idle.framemax;
+                    this.framesCurrent = 0;
+
+                }
               break;
+
+            case 'run':
+                if( this.image !== this.sprites.run.image){
+                    this.image = this.sprites.run.image;
+                    this.framemax = this.sprites.run.framemax;
+                    this.framesCurrent = 0;
+                    
+                }
+              break;
+
+            case 'jump':
+                if( this.image !== this.sprites.jump.image){
+                    this.image = this.sprites.jump.image;
+                    this.framemax = this.sprites.jump.framemax;
+                    this.framesCurrent = 0;
+                }
+              break;
+
+            case 'punch':{
+                if( this.image !== this.sprites.punch.image){
+                    this.image = this.sprites.punch.image;
+                    this.framemax = this.sprites.punch.framemax;
+                    this.framesCurrent = 0;
+                }
+              break;
+            }
+            break;
         }
       
-    }
-
-
-
+    } 
 }
