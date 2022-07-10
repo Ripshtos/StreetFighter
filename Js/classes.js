@@ -13,7 +13,9 @@ class Sprite {
         this.offset = offset;
     }
 
-    draw() {
+
+
+    draw() { // draws a sprite based on location and the sprite frame
         c.drawImage(
         this.image,
         this.framesCurrent * ( this.image.width / this.framemax),
@@ -24,13 +26,14 @@ class Sprite {
         this.position.y - this.offset.y,
         (this.image.width / this.framemax) * this.scale,
         this.image.height * this.scale)
-        }
+            
+    }
 
     
-    animateFrame(){
+    animateFrame(){ // frame elapser 
         this.framesElapsed++;
         if(this.framesElapsed % this.frameHold === 0){
-            if(this.framesCurrent < this.framemax - 1){                    this.framesCurrent++;
+            if(this.framesCurrent < this.framemax - 1){ this.framesCurrent++;
                 } else{
                 this.framesCurrent = 0;
             }
@@ -43,9 +46,7 @@ class Sprite {
         this.animateFrame();
     }
 
-    
-
-}
+ }
 
 
 
@@ -101,13 +102,16 @@ class Fighter extends Sprite { // player
         this.draw() 
         this.animateFrame();
         
+        /* this is the hitbox fix for the flip
         if(this.lastkey === 'd' || this.lastkey === 'arrowRight'){
             this.hitbox.offset.x = 0;
+            
         }
         else if(this.lastkey === 'a' || this.lastkey === 'arrowLeft') {
             this.hitbox.offset.x = -50 ;
+            
         }
-        
+        */
 
         this.hitbox.position.x = this.position.x + this.hitbox.offset.x;        
         this.hitbox.position.y = this.position.y;
@@ -115,7 +119,7 @@ class Fighter extends Sprite { // player
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
         
-        if (this.position.y + this.height + this.velocity.y >= canvas.height) {
+        if (this.position.y + this.height + this.velocity.y >= canvas.height) { //gravity adder
           this.velocity.y = 0;
         } else this.velocity.y += gravity
  
@@ -130,15 +134,17 @@ class Fighter extends Sprite { // player
         if(this.health <= 0)//check if dead 
         {
             this.isDead = true;
+            this.SwitchSprite('death');
+
         }    
     }
 
-    Attacking(){
+    Attacking(){ // function that sets attacking to true for some while
         this.isAttacking = true;
         setTimeout(() => { this.isAttacking = false;} , 100)
     }
 
-    SwitchSprite(sprite){
+    SwitchSprite(sprite){// function that switches the player sprites based on input
 
         if( this.image === this.sprites.punch.image && this.framesCurrent < this.sprites.punch.framemax -1 ){
              return
@@ -179,7 +185,17 @@ class Fighter extends Sprite { // player
                 }
               break;
             }
-            break;
+
+            
+            case 'death':{
+                if( this.image !== this.sprites.death.image){
+                    this.image = this.sprites.death.image;
+                    this.framemax = this.sprites.punch.framemax;
+                    this.framesCurrent = 0;
+                }
+              break;
+            }
+            
         }
       
     } 

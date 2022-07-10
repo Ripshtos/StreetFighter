@@ -6,6 +6,7 @@ canvas.height = 576;
 c.fillRect(0, 0, canvas.width, canvas.height);
 
 const gravity = 0.2;
+
 const background = new Sprite({ 
     position :{
     x:0,
@@ -14,6 +15,15 @@ const background = new Sprite({
 imgSrc :'./img/background2.png',
 
 })
+
+const ken = new Sprite({ 
+    position :{
+    x:0,
+    y:0
+},
+imgSrc :'./img/ken/KenWins.png'});
+
+
 
 
 const player = new Fighter({ //player character
@@ -51,6 +61,10 @@ const player = new Fighter({ //player character
         punch :{
             imgSrc:'./img/ken/kenPunch3.png',
             framemax : 3
+        },
+        death :{
+            imgSrc:'./img/ken/kenDeath1.png',
+            framemax : 1
         }
     } 
 });
@@ -87,6 +101,14 @@ const enemy = new Fighter({ //enemy character
         jump :{
             imgSrc:'./img/ken/kenJump7.png',
             framemax : 7
+        },
+        punch :{
+            imgSrc:'./img/ken/kenPunch3.png',
+            framemax : 3
+        },
+        death :{
+            imgSrc:'./img/ken/kenDeath1.png',
+            framemax : 1
         }
     }
 });
@@ -106,6 +128,36 @@ function RectangularCollision({ rectangal1 , rectangal2}){ // collision detectio
     }
 }
 
+function Winner(){
+    if ( player.health <= 0)
+    {
+        player.isDead = true
+        console.log('enemy wins');
+        // ryu.update
+    }
+    else if (enemy.health <= 0 )
+    {
+        enemy.isDead = true
+        console.log('player wins')
+        ken.update();
+        document.getElementById('HealthBars').style.display = "none";
+    }
+    else
+    {
+        if(enemy.health > player.health)
+        {
+            player.isDead = true;
+            //ryu.update();
+            console.log('enemy wins')
+        }
+        else{
+            enemy.isDead = true;
+            ken.update();
+            console.log('player wins')    
+        }
+    }
+}
+
 function animate() //animation loop
 {
     window.requestAnimationFrame(animate);
@@ -114,7 +166,11 @@ function animate() //animation loop
     background.update();
     player.velocity.x = 0;
     enemy.velocity.x = 0;
-    
+
+    if(player.velocity.y < 0){
+        player.SwitchSprite('jump');
+    }
+
     if(!player.isDead){
         if (keys.d.pressed && player.lastkey === 'd') { player.velocity.x = 3;
         player.SwitchSprite('run'); }
@@ -125,16 +181,14 @@ function animate() //animation loop
     if(!enemy.isDead){
         if (keys.arrowRight.pressed && enemy.lastkey === 'arrowRight') { enemy.velocity.x = 3; }
         else if (keys.arrowLeft.pressed && enemy.lastkey === 'arrowLeft') { enemy.velocity.x = -3; }
-        else { } 
+        else { enemy.SwitchSprite('idle'); } 
     }
 
-    if(player.velocity.y > 0){
-        player.SwitchSprite('jump');
-    }
 
     player.update();
     enemy.update();
-    
+     
+
     if( RectangularCollision ( { rectangal1 : player , rectangal2 : enemy })) // detect collision if player hits enemy
     {
         console.log("player hit enemy");
@@ -143,7 +197,6 @@ function animate() //animation loop
         
         console.log(enemy.health);
     } 
-
     
     if( RectangularCollision ( { rectangal1 : enemy , rectangal2 : player })) // detect collision if enemy hits player
     {
@@ -153,29 +206,31 @@ function animate() //animation loop
         console.log(player.health);
     } 
 
-}
-
-function counter(){ //game timer set to 60 seconds
-    var timeleft = 60;
-    var downloadTimer = setInterval(function(){
-    if(timeleft <= 0){// when timer ends
-        clearInterval(downloadTimer);
-        console.log("fin")
-        if (player.health > enemy.health){
-            enemy.isDead = true;
-            console.log("player wins");
-
-        }
-        else{
-            player.isDead = true;
-            console.log("enemy wins");
-        }
+    if(player.health <= 0 || enemy.health <= 0)// checks if anyone died
+    {
+        Winner();
     }
-    document.getElementById("progressBar").value = 60 - timeleft;
-    timeleft -= 1;
-    }, 1000);
-    
+
+
 }
+
+let timeleft = 60;
+let downloadTimer;
+function counter(){ //game timer set to 60 seconds
+    if(timeleft > 0){// when timer ends
+        downloadTimer = setTimeout(counter,1000)
+        timeleft--;
+        document.getElementById("progressBar").value = 60 - timeleft;
+       
+    }
+
+    if (timeleft === 0 ){
+        Winner();
+    }
+
+}
+    
+
 
 counter();
 animate();
