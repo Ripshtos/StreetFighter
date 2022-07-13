@@ -23,7 +23,12 @@ const ken = new Sprite({
 },
 imgSrc :'./img/ken/KenWins.png'});
 
-
+const ryu = new Sprite({ 
+    position :{
+    x:0,
+    y:0
+},
+imgSrc :'./img/ryu/ryuWins.png'});
 
 
 const player = new Fighter({ //player character
@@ -35,15 +40,11 @@ const player = new Fighter({ //player character
         x: 0,
         y: 10
     },
-    offset: {
-        x: 0,
-        y: 0
-    },
     imgSrc:'./img/ken/kenIdle4.png',
     framemax : 4,
-    scale : 2,
+    scale : 1.6,
     offset :{
-        x:30,
+        x:18,
         y:100
     },sprites:{
         idle :{
@@ -63,8 +64,8 @@ const player = new Fighter({ //player character
             framemax : 3
         },
         death :{
-            imgSrc:'./img/ken/kenDeath1.png',
-            framemax : 1
+            imgSrc:'./img/ken/kenDeath5.png',
+            framemax : 5
         }
     } 
 });
@@ -78,36 +79,32 @@ const enemy = new Fighter({ //enemy character
         x: 0,
         y: 10
     },
-    offset: {
-        x: 0,
-        y: 0
-    },
-    imgSrc:'./img/ken/kenIdle4.png',
+    imgSrc:'./img/ryu/ryuIdle4.png',
     framemax : 4,
-    scale : 2,
+    scale : 1.6,
     offset :{
-        x:30,
+        x:20,
         y:100
     },
     sprites:{
         idle :{
-            imgSrc:'./img/ken/kenIdle4.png',
+            imgSrc:'./img/ryu/ryuIdle4.png',
             framemax : 4
         },
         run :{
-            imgSrc:'./img/ken/kenRun5.png',
+            imgSrc:'./img/ryu/ryuRun5.png',
             framemax : 5
         },
         jump :{
-            imgSrc:'./img/ken/kenJump7.png',
+            imgSrc:'./img/ryu/ryuJump7.png',
             framemax : 7
         },
         punch :{
-            imgSrc:'./img/ken/kenPunch3.png',
-            framemax : 3
+            imgSrc:'./img/ryu/ryuPunch3.png',
+            framemax : 3.05
         },
         death :{
-            imgSrc:'./img/ken/kenDeath1.png',
+            imgSrc:'./img/ryu/ryuIdle4.png',
             framemax : 1
         }
     }
@@ -121,42 +118,10 @@ const keys = { //constant that contains the if current key is pressed
     arrowRight : { pressed: false }};
 
 
-function RectangularCollision({ rectangal1 , rectangal2}){ // collision detection
-    if( rectangal1.hitbox.position.x + rectangal1.hitbox.width >= rectangal2.position.x && rectangal1.hitbox.position.x <= rectangal2.hitbox.position.x + rectangal2.hitbox.width
-        && rectangal1.hitbox.position.y + rectangal1.hitbox.height >= rectangal2.position.y && rectangal1.isAttacking ){
-            return true;
-    }
-}
 
-function Winner(){
-    if ( player.health <= 0)
-    {
-        player.isDead = true
-        console.log('enemy wins');
-        // ryu.update
-    }
-    else if (enemy.health <= 0 )
-    {
-        enemy.isDead = true
-        console.log('player wins')
-        ken.update();
-        document.getElementById('HealthBars').style.display = "none";
-    }
-    else
-    {
-        if(enemy.health > player.health)
-        {
-            player.isDead = true;
-            //ryu.update();
-            console.log('enemy wins')
-        }
-        else{
-            enemy.isDead = true;
-            ken.update();
-            console.log('player wins')    
-        }
-    }
-}
+
+counter();
+
 
 function animate() //animation loop
 {
@@ -167,27 +132,33 @@ function animate() //animation loop
     player.velocity.x = 0;
     enemy.velocity.x = 0;
 
-    if(player.velocity.y < 0){
-        player.SwitchSprite('jump');
-    }
+    
 
     if(!player.isDead){
         if (keys.d.pressed && player.lastkey === 'd') { player.velocity.x = 3;
         player.SwitchSprite('run'); }
         else if (keys.a.pressed && player.lastkey === 'a') { player.velocity.x = -3; player.SwitchSprite('run') }
         else {  player.SwitchSprite('idle');  } 
+
+    }
+    if(player.velocity.y < 0){
+        player.SwitchSprite('jump');
     }
 
+
     if(!enemy.isDead){
-        if (keys.arrowRight.pressed && enemy.lastkey === 'arrowRight') { enemy.velocity.x = 3; }
-        else if (keys.arrowLeft.pressed && enemy.lastkey === 'arrowLeft') { enemy.velocity.x = -3; }
+        if (keys.arrowRight.pressed && enemy.lastkey === 'arrowRight') { enemy.velocity.x = 3; 
+            enemy.SwitchSprite('run');}
+        else if (keys.arrowLeft.pressed && enemy.lastkey === 'arrowLeft') { enemy.velocity.x = -3;
+            enemy.SwitchSprite('run');}
         else { enemy.SwitchSprite('idle'); } 
     }
 
+    
+    if(enemy.velocity.y < 0){
+        enemy.SwitchSprite('jump');
+    }
 
-    player.update();
-    enemy.update();
-     
 
     if( RectangularCollision ( { rectangal1 : player , rectangal2 : enemy })) // detect collision if player hits enemy
     {
@@ -208,31 +179,14 @@ function animate() //animation loop
 
     if(player.health <= 0 || enemy.health <= 0)// checks if anyone died
     {
-        Winner();
+        Winner(player,enemy,downloadTimer);
     }
 
 
+    player.update();
+    enemy.update();
 }
 
-let timeleft = 60;
-let downloadTimer;
-function counter(){ //game timer set to 60 seconds
-    if(timeleft > 0){// when timer ends
-        downloadTimer = setTimeout(counter,1000)
-        timeleft--;
-        document.getElementById("progressBar").value = 60 - timeleft;
-       
-    }
-
-    if (timeleft === 0 ){
-        Winner();
-    }
-
-}
-    
-
-
-counter();
 animate();
 
 window.addEventListener('keydown', (event) => {
@@ -283,6 +237,7 @@ window.addEventListener('keydown', (event) => {
         
         case 'ArrowDown':
             enemy.Attacking();
+            enemy.SwitchSprite('punch');
             break;
         }
     }

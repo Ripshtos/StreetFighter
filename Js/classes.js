@@ -9,7 +9,7 @@ class Sprite {
         this.framemax = framemax;
         this.framesCurrent = 0;
         this.framesElapsed = 0;
-        this.frameHold = 10;
+        this.frameHold = 5;
         this.offset = offset;
     }
 
@@ -41,7 +41,7 @@ class Sprite {
     }
 
     
-    update() {
+    update() { // draws and updates frames
         this.draw();
         this.animateFrame();
     }
@@ -98,9 +98,9 @@ class Fighter extends Sprite { // player
     }
 
 
-    update() {
+    update() {// updates each element, draws and applies physics and borders
         this.draw() 
-        this.animateFrame();
+        if(!this.isdead) {this.animateFrame()};
         
         /* this is the hitbox fix for the flip
         if(this.lastkey === 'd' || this.lastkey === 'arrowRight'){
@@ -118,7 +118,17 @@ class Fighter extends Sprite { // player
 
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
-        
+
+        /*
+        // draw the attack box
+         c.fillRect(
+         this.position.x,
+         this.position.y - 100,
+         this.width,
+         this.height
+        )
+        */
+
         if (this.position.y + this.height + this.velocity.y >= canvas.height) { //gravity adder
           this.velocity.y = 0;
         } else this.velocity.y += gravity
