@@ -99,7 +99,7 @@ class Fighter extends Sprite { // player
 
 
     update() {// updates each element, draws and applies physics and borders
-        this.draw() 
+        this.draw()
         if(!this.isdead) {this.animateFrame()};
         
         /* this is the hitbox fix for the flip
@@ -156,9 +156,14 @@ class Fighter extends Sprite { // player
 
     SwitchSprite(sprite){// function that switches the player sprites based on input
 
-        if( this.image === this.sprites.punch.image && this.framesCurrent < this.sprites.punch.framemax -1 ){
-             return
+        if( this.image === this.sprites.jump.image && this.framesCurrent < this.sprites.jump.framemax -1 && !this.isAttacking){
+            return
         }
+        
+        if( this.image === this.sprites.punch.image && this.framesCurrent < this.sprites.punch.framemax -1 ){
+            return
+       }
+
 
            switch (sprite) {
             case 'idle':

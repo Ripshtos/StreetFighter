@@ -101,7 +101,7 @@ const enemy = new Fighter({ //enemy character
         },
         punch :{
             imgSrc:'./img/ryu/ryuPunch3.png',
-            framemax : 3.05
+            framemax : 3
         },
         death :{
             imgSrc:'./img/ryu/ryuIdle4.png',
@@ -125,28 +125,29 @@ counter();
 
 function animate() //animation loop
 {
-    window.requestAnimationFrame(animate);
+    if(!enemy.isDead && !player.isDead){{window.requestAnimationFrame(animate)}
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
     background.update();
     player.velocity.x = 0;
     enemy.velocity.x = 0;
-
+    }
     
 
-    if(!player.isDead){
+    if(!player.isDead){// player movement
         if (keys.d.pressed && player.lastkey === 'd') { player.velocity.x = 3;
         player.SwitchSprite('run'); }
         else if (keys.a.pressed && player.lastkey === 'a') { player.velocity.x = -3; player.SwitchSprite('run') }
         else {  player.SwitchSprite('idle');  } 
 
     }
-    if(player.velocity.y < 0){
+    if(player.velocity.y < 0){// jump sprite change
+
         player.SwitchSprite('jump');
     }
 
 
-    if(!enemy.isDead){
+    if(!enemy.isDead){ // enemy movement  
         if (keys.arrowRight.pressed && enemy.lastkey === 'arrowRight') { enemy.velocity.x = 3; 
             enemy.SwitchSprite('run');}
         else if (keys.arrowLeft.pressed && enemy.lastkey === 'arrowLeft') { enemy.velocity.x = -3;
@@ -155,7 +156,7 @@ function animate() //animation loop
     }
 
     
-    if(enemy.velocity.y < 0){
+    if(enemy.velocity.y < 0){// jump sprite change
         enemy.SwitchSprite('jump');
     }
 
@@ -176,15 +177,18 @@ function animate() //animation loop
         document.querySelector('#bar-player').style.width = player.health + "%";
         console.log(player.health);
     } 
+    
 
-    if(player.health <= 0 || enemy.health <= 0)// checks if anyone died
+    if(player.health <= 0 || enemy.health <= 0 || timeleft <= 0)// checks if anyone died
     {
         Winner(player,enemy,downloadTimer);
     }
+    else{
+        player.update();
+        enemy.update();
+    }
 
 
-    player.update();
-    enemy.update();
 }
 
 animate();
