@@ -60,7 +60,7 @@ class Fighter extends Sprite { // player
         scale = 1,
         framemax = 1,
         offset = {x: 0, y: 0},
-        sprites
+        sprites,
     })
     {
         super({
@@ -102,16 +102,15 @@ class Fighter extends Sprite { // player
         this.draw()
         if(!this.isdead) {this.animateFrame()};
         
-        /* this is the hitbox fix for the flip
+        // this is the hitbox fix for the flip
         if(this.lastkey === 'd' || this.lastkey === 'arrowRight'){
             this.hitbox.offset.x = 0;
-            
         }
         else if(this.lastkey === 'a' || this.lastkey === 'arrowLeft') {
             this.hitbox.offset.x = -50 ;
-            
         }
-        */
+
+        
 
         this.hitbox.position.x = this.position.x + this.hitbox.offset.x;        
         this.hitbox.position.y = this.position.y;
@@ -127,6 +126,10 @@ class Fighter extends Sprite { // player
          this.width,
          this.height
         )
+        if(this.isAttacking){
+            c.fillStyle = 'green';
+            c.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);    
+        }
         */
 
         if (this.position.y + this.height + this.velocity.y >= canvas.height) { //gravity adder
@@ -145,8 +148,9 @@ class Fighter extends Sprite { // player
         {
             this.isDead = true;
             this.SwitchSprite('death');
-
-        }    
+        }
+        this.offset.x -= this.hitbox.offset.x;
+    
     }
 
     Attacking(){ // function that sets attacking to true for some while
@@ -156,22 +160,29 @@ class Fighter extends Sprite { // player
 
     SwitchSprite(sprite){// function that switches the player sprites based on input
 
-        if( this.image === this.sprites.jump.image && this.framesCurrent < this.sprites.jump.framemax -1 && !this.isAttacking){
+        
+        if( this.image === this.sprites.jump.image &&
+            this.framesCurrent < this.sprites.jump.framemax -1
+            && !this.isAttacking)
+        {
+               return
+        }
+
+        if(( this.image === this.sprites.punch.image && this.framesCurrent < this.sprites.punch.framemax -1 )
+         || (this.image === this.sprites.fpunch.image && this.framesCurrent < this.sprites.fpunch.framemax -1 ))
+        {
             return
         }
+
         
-        if( this.image === this.sprites.punch.image && this.framesCurrent < this.sprites.punch.framemax -1 ){
-            return
-       }
 
 
-           switch (sprite) {
+        switch (sprite) {
             case 'idle':
                 if(this.image !== this.sprites.idle.image){
                     this.image = this.sprites.idle.image;
                     this.framemax =this.sprites.idle.framemax;
                     this.framesCurrent = 0;
-
                 }
               break;
 
@@ -205,11 +216,60 @@ class Fighter extends Sprite { // player
             case 'death':{
                 if( this.image !== this.sprites.death.image){
                     this.image = this.sprites.death.image;
-                    this.framemax = this.sprites.punch.framemax;
+                    this.framemax = this.sprites.death.framemax;
                     this.framesCurrent = 0;
                 }
               break;
             }
+
+            // flip
+
+            case 'fidle':
+                if(this.image !== this.sprites.fidle.image){
+                    this.image = this.sprites.fidle.image;
+                    this.framemax =this.sprites.fidle.framemax;
+                    this.framesCurrent = 0;
+
+                }
+              break;
+
+            case 'frun':
+                if( this.image !== this.sprites.frun.image){
+                    this.image = this.sprites.frun.image;
+                    this.framemax = this.sprites.frun.framemax;
+                    this.framesCurrent = 0;
+                    
+                }
+              break;
+
+            case 'fjump':
+                if( this.image !== this.sprites.fjump.image){
+                    this.image = this.sprites.fjump.image;
+                    this.framemax = this.sprites.fjump.framemax;
+                    this.framesCurrent = 0;
+                }
+              break;
+
+            case 'fpunch':{
+                if( this.image !== this.sprites.fpunch.image){
+                    this.image = this.sprites.fpunch.image;
+                    this.framemax = this.sprites.fpunch.framemax;
+                    this.framesCurrent = 0;
+                }
+              break;
+            }
+
+            
+            case 'fdeath':{
+                if( this.image !== this.sprites.fdeath.image){
+                    this.image = this.sprites.fdeath.image;
+                    this.framemax = this.sprites.fdeath.framemax;
+                    this.framesCurrent = 0;
+                }
+              break;
+            }
+
+
             
         }
       

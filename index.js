@@ -46,7 +46,8 @@ const player = new Fighter({ //player character
     offset :{
         x:18,
         y:100
-    },sprites:{
+    },
+    sprites:{
         idle :{
             imgSrc:'./img/ken/kenIdle4.png',
             framemax : 4
@@ -64,11 +65,37 @@ const player = new Fighter({ //player character
             framemax : 3
         },
         death :{
-            imgSrc:'./img/ken/kenDeath5.png',
+            imgSrc:'./img/fken/kenDeath5.png',
             framemax : 5
         }
-    } 
+        
+        //flip
+        
+        ,fidle :{
+            imgSrc:'./img/fken/kenIdle4.png',
+            framemax : 4
+        },
+        frun :{
+            imgSrc:'./img/fken/kenRun5.png',
+            framemax : 5
+        },
+        fjump :{
+            imgSrc:'./img/fken/kenJump7.png',
+            framemax : 7
+        },
+        fpunch :{
+            imgSrc:'./img/fken/kenPunch3.png',
+            framemax : 3
+        },
+        fdeath :{
+            imgSrc:'./img/fken/kenDeath5.png',
+            framemax : 5
+        },
+        
+    },
 });
+
+player.lastkey = 'd';
 
 const enemy = new Fighter({ //enemy character
     position: {
@@ -106,6 +133,26 @@ const enemy = new Fighter({ //enemy character
         death :{
             imgSrc:'./img/ryu/ryuIdle4.png',
             framemax : 1
+        },
+        fidle :{
+            imgSrc:'./img/fryu/ryuIdle4.png',
+            framemax : 4
+        },
+        frun :{
+            imgSrc:'./img/fryu/ryuRun5.png',
+            framemax : 5
+        },
+        fjump :{
+            imgSrc:'./img/fryu/ryuJump7.png',
+            framemax : 7
+        },
+        fpunch :{
+            imgSrc:'./img/fryu/ryuPunch3.png',
+            framemax : 3
+        },
+        fdeath :{
+            imgSrc:'./img/fryu/ryuIdle4.png',
+            framemax : 1
         }
     }
 });
@@ -125,22 +172,32 @@ counter();
 
 function animate() //animation loop
 {
-    if(!enemy.isDead && !player.isDead){{window.requestAnimationFrame(animate)}
+    if(!enemy.isDead && !player.isDead){
+    {
+    window.requestAnimationFrame(animate)}
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
     background.update();
     player.velocity.x = 0;
     enemy.velocity.x = 0;
     }
-    
 
     if(!player.isDead){// player movement
         if (keys.d.pressed && player.lastkey === 'd') { player.velocity.x = 3;
         player.SwitchSprite('run'); }
-        else if (keys.a.pressed && player.lastkey === 'a') { player.velocity.x = -3; player.SwitchSprite('run') }
-        else {  player.SwitchSprite('idle');  } 
-
+        else if (keys.a.pressed && player.lastkey === 'a') {
+            player.velocity.x = -3; 
+            player.SwitchSprite('frun') 
+        }
+        else { 
+             if(player.lastkey === 'd')
+            {
+                player.SwitchSprite('idle');
+            }
+            else{ player.SwitchSprite('fidle')}
+        }  
     }
+    
     if(player.velocity.y < 0){// jump sprite change
 
         player.SwitchSprite('jump');
@@ -149,10 +206,15 @@ function animate() //animation loop
 
     if(!enemy.isDead){ // enemy movement  
         if (keys.arrowRight.pressed && enemy.lastkey === 'arrowRight') { enemy.velocity.x = 3; 
-            enemy.SwitchSprite('run');}
+            enemy.SwitchSprite('frun');}
         else if (keys.arrowLeft.pressed && enemy.lastkey === 'arrowLeft') { enemy.velocity.x = -3;
             enemy.SwitchSprite('run');}
-        else { enemy.SwitchSprite('idle'); } 
+        else { 
+             if(enemy.lastkey === 'arrowRight'){
+                enemy.SwitchSprite('fidle');
+            }
+            else{ enemy.SwitchSprite('idle')}
+        } 
     }
 
     
@@ -164,7 +226,7 @@ function animate() //animation loop
     if( RectangularCollision ( { rectangal1 : player , rectangal2 : enemy })) // detect collision if player hits enemy
     {
         console.log("player hit enemy");
-        enemy.health -= 2;
+        enemy.health -= 1;
         document.querySelector('#bar-enemy').style.width = enemy.health + "%";
         
         console.log(enemy.health);
@@ -173,7 +235,7 @@ function animate() //animation loop
     if( RectangularCollision ( { rectangal1 : enemy , rectangal2 : player })) // detect collision if enemy hits player
     {
         console.log("enemy hit player");
-        player.health -= 2;
+        player.health -= 1;
         document.querySelector('#bar-player').style.width = player.health + "%";
         console.log(player.health);
     } 
@@ -215,9 +277,10 @@ window.addEventListener('keydown', (event) => {
             
             case ' ':
                 player.Attacking();
-                player.SwitchSprite('punch');
+                if(player.lastkey === 'd'){player.SwitchSprite('punch')}
+                else{player.SwitchSprite('fpunch')}
                 break;
-            }
+        }
     }
 
     if(!enemy.isDead){
@@ -235,13 +298,14 @@ window.addEventListener('keydown', (event) => {
         case 'ArrowUp':
             if(enemy.position.y > 0 ) 
             {
-                enemy.velocity.y = -10;
+                enemy.velocity.y =-10;
             }
             break;
         
         case 'ArrowDown':
             enemy.Attacking();
-            enemy.SwitchSprite('punch');
+            if(enemy.lastkey === 'arrowLeft'){enemy.SwitchSprite('punch');}
+            else{enemy.SwitchSprite('fpunch')}
             break;
         }
     }
