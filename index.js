@@ -12,9 +12,20 @@ const background = new Sprite({
     x:0,
     y:0
 },
-imgSrc :'./img/background2.png',
-
+imgSrc :'./img/background1.png',
 })
+
+const flag = new Sprite({ 
+    position :{
+    x:757,
+    y:209
+},
+imgSrc :'./img/flag.png',
+framemax : 3,
+scale :1.5
+})
+
+
 
 const ken = new Sprite({ 
     position :{
@@ -178,6 +189,7 @@ function animate() //animation loop
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
     background.update();
+    flag.update();
     player.velocity.x = 0;
     enemy.velocity.x = 0;
     }
