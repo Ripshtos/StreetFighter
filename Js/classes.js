@@ -168,6 +168,13 @@ class Fighter extends Sprite { // player
                return
         }
 
+        if(this.image === this.sprites.fjump.image &&
+            this.framesCurrent < this.sprites.fjump.framemax -1
+            && !this.isAttacking)
+        {
+            return
+        }
+        
         if(( this.image === this.sprites.punch.image && this.framesCurrent < this.sprites.punch.framemax -1 )
          || (this.image === this.sprites.fpunch.image && this.framesCurrent < this.sprites.fpunch.framemax -1 ))
         {

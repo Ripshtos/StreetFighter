@@ -15,7 +15,7 @@ const background = new Sprite({
 imgSrc :'./img/background1.png',
 })
 
-const flag = new Sprite({ 
+const flag = new Sprite({ // simple flag animation
     position :{
     x:757,
     y:209
@@ -26,15 +26,48 @@ scale :1.5
 })
 
 
+const men = new Sprite({ // simple man on boat animation
+    position :{
+    x:150,
+    y:337
+},
+imgSrc :'./img/MEN.png',
+framemax : 3,
+scale :1.5
+})
 
-const ken = new Sprite({ 
+const women = new Sprite({ // simple woman on boat animation
+    position :{
+    x:238,
+    y:333
+},
+imgSrc :'./img/WOMEN.png',
+framemax : 3,
+scale :1.45,
+})
+
+
+const sailor = new Sprite({ // simple sailor on boat animation
+    position :{
+    x:360,
+    y:322
+},
+imgSrc :'./img/SAILOR.png',
+framemax : 3,
+scale :1.5,
+})
+
+
+
+
+const ken = new Sprite({ // sprite when ken wins
     position :{
     x:0,
     y:0
 },
 imgSrc :'./img/ken/KenWins.png'});
 
-const ryu = new Sprite({ 
+const ryu = new Sprite({ // sprite when ryu wins
     position :{
     x:0,
     y:0
@@ -42,7 +75,7 @@ const ryu = new Sprite({
 imgSrc :'./img/ryu/ryuWins.png'});
 
 
-const player = new Fighter({ //player character
+const player = new Fighter({ //player character 
     position: {
         x: 10,
         y: 0
@@ -80,7 +113,7 @@ const player = new Fighter({ //player character
             framemax : 5
         }
         
-        //flip
+        //flip sprites for when the player flips position
         
         ,fidle :{
             imgSrc:'./img/fken/kenIdle4.png',
@@ -145,6 +178,10 @@ const enemy = new Fighter({ //enemy character
             imgSrc:'./img/ryu/ryuIdle4.png',
             framemax : 1
         },
+
+
+        //flip sprites for when the player flips position
+
         fidle :{
             imgSrc:'./img/fryu/ryuIdle4.png',
             framemax : 4
@@ -190,6 +227,9 @@ function animate() //animation loop
     c.fillRect(0, 0, canvas.width, canvas.height);
     background.update();
     flag.update();
+    men.update();
+    women.update();
+    sailor.update();
     player.velocity.x = 0;
     enemy.velocity.x = 0;
     }
@@ -211,8 +251,11 @@ function animate() //animation loop
     }
     
     if(player.velocity.y < 0){// jump sprite change
-
+        if(player.lastkey === 'd')
         player.SwitchSprite('jump');
+        else{
+            player.SwitchSprite('fjump');
+        }
     }
 
 
@@ -231,7 +274,11 @@ function animate() //animation loop
 
     
     if(enemy.velocity.y < 0){// jump sprite change
+        if(enemy.lastkey === 'arrowLeft')
         enemy.SwitchSprite('jump');
+        else{
+            enemy.SwitchSprite('fjump');
+        }
     }
 
 
@@ -269,25 +316,25 @@ animate();
 
 window.addEventListener('keydown', (event) => {
     if (!player.isDead){
-        switch (event.key) {
-            case 'd':
+        switch (event.code) {
+            case 'KeyD':
                 keys.d.pressed = true;
                 player.lastkey = 'd';
                 break;
 
-            case 'a':
+            case 'KeyA':
                 keys.a.pressed = true;
                 player.lastkey = 'a';
                 break;
 
-            case 'w':
+            case 'KeyW':
                 if(player.position.y > 0)
                 {
                     player.velocity.y = -10;
                 }
                 break;
             
-            case ' ':
+            case 'Space':
                 player.Attacking();
                 if(player.lastkey === 'd'){player.SwitchSprite('punch')}
                 else{player.SwitchSprite('fpunch')}
@@ -324,16 +371,16 @@ window.addEventListener('keydown', (event) => {
 });
 
 window.addEventListener('keyup', (event) => {
-    switch (event.key) {
-        case 'd':
+    switch (event.code) {
+        case 'KeyD':
             keys.d.pressed = false;
             break;
 
-        case 'a':
+        case 'KeyA':
             keys.a.pressed = false;
             break;
 
-        case 'w':
+        case 'KeyW':
             break;
     }
       switch (event.key) {
