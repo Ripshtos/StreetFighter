@@ -65,7 +65,7 @@ const ken = new Sprite({
     x: 0,
     y: 0,
   },
-  imgSrc: "./img/ken/KenWins.png",
+  imgSrc: "./img/ken/kenWins.png",
 });
 
 const ryu = new Sprite({
