@@ -2,7 +2,14 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);               
+    transform: translate(-50%, -50%); 
+}
+
+#background{
+  background-image: url('http://tuhinternational.com/wp-content/uploads/street-fighter-2-1024x576.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 #health-bar-player { /* Player health bar outside*/
